@@ -1,0 +1,29 @@
+services:
+  app:
+    build: AsyncApi
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+  db:
+    image: postgres:14.5-alpine
+    ports:
+      - 5432:5432
+    volumes:
+      - ./docker-volumes/:/var/lib/postgresql/data/
+    environment:
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=&{DB_PASSWORD}
+      - POSTGRES_DB=&{DB_NAME}
+  es01:
+    image: elasticsearch:8.4.1
+    ports:
+      - 9200:9200
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - http.compression=true
+      - http.max_content_length=500mb
+      - xpack.security.enabled=false
+    depends_on:
+      - db

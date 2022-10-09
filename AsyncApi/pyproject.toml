@@ -1,0 +1,43 @@
+[tool.poetry]
+name = "AsyncApiSprint1"
+version = "1.0"
+description = ""
+authors = ["bekishev04 <bekishev04@yandex.ru>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+uvicorn = "^0.18.3"
+fastapi = "^0.85.0"
+loguru = "^0.6.0"
+pydantic = { version = "^1.10.2", extras = ["dotenv"] }
+orjson = "^3.8.0"
+elasticsearch = {extras = ["async"], version = "^8.4.2"}
+aioredis = "^2.0.1"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.0.0"
+black = "22.6.0"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.black]
+line-length = 88
+include = '\.pyi?$'
+extend-exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | \.env
+  | _build
+  | buck-out
+  | build
+  | dist
+  | tests/.*/setup.py
+)/
+'''
