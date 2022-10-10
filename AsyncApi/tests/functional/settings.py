@@ -21,3 +21,6 @@ class TestSettings(BaseSettings):
             os.path.join(os.path.dirname(basedir), "logs", "app.log"),
             level="DEBUG" if self.debug else "ERROR",
         )
+
+
+test_settings = TestSettings()
