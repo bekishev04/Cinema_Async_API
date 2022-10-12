@@ -12,7 +12,7 @@ services:
   tests:
     image: app-image
     depends_on:
-      -app
+      - app
     entrypoint: >
       sh -c "poetry install --only test
       && poetry shell
