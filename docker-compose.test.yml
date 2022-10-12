@@ -1,0 +1,36 @@
+services:
+  app:
+    build:
+      context: ./AsyncApi
+      dockerfile: Dockerfile
+    image: app-image
+    expose:
+      - "8000"
+    depends_on:
+      - es01
+      - redis01
+  tests:
+    image: app-image
+    depends_on:
+      -app
+    entrypoint: >
+      sh -c "poetry install --only test
+      && poetry shell
+      && poetry run python3 /tests/functional/utils/wait_for_es.py
+      && poetry run python3 /tests/functional/utils/wait_for_redis.py
+      && poetry run pytest /tests/functional/src"
+
+  es01:
+    image: elasticsearch:8.4.1
+    expose:
+      - 9200
+    environment:
+      - discovery.type=single-node
+      - ES_JAVA_OPTS=-Xms512m -Xmx512m
+      - http.compression=true
+      - http.max_content_length=500mb
+      - xpack.security.enabled=false
+  redis01:
+    image: redis:latest
+    expose:
+      - 6379
