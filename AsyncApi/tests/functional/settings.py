@@ -8,7 +8,9 @@ from pydantic.env_settings import BaseSettings
 class TestSettings(BaseSettings):
     debug: bool = False
     redis_uri: RedisDsn = "redis://127.0.0.1:6379"
-    elastic_uri: str = ""
+    elastic_uri: str = "https://127.0.0.1:9200"
+    es_index = 'movies'
+    es_id_field = 'id'
 
     class Config:
         validate_assignment = True
