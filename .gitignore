@@ -132,3 +132,5 @@ dmypy.json
 /docker_compose/simple_project/data/*
 .first_run
 *storage.json
+
+poetry.lock
