@@ -1,15 +1,20 @@
 import time
 
+from loguru import logger
 from redis import Redis, ConnectionError
 
-from functional.settings import test_settings
+from tests.functional.settings import test_settings
 
 if __name__ == '__main__':
-    r = Redis(test_settings.redis_uri, socket_connect_timeout=1)
+    logger.debug(f'waiting for redis on {test_settings.redis_uri}')
+    r = Redis(host=test_settings.redis_uri.host, port=test_settings.redis_uri.port)
+
     while True:
         try:
             r.ping()
+            logger.debug('redis answered')
             break
         except ConnectionError:
+            logger.debug('redis doesn\'t answer')
             time.sleep(1)
             pass

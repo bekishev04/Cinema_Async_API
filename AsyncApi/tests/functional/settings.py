@@ -6,15 +6,15 @@ from pydantic.env_settings import BaseSettings
 
 
 class TestSettings(BaseSettings):
-    debug: bool = False
-    redis_uri: RedisDsn = "redis://127.0.0.1:6379"
-    elastic_uri: str = "https://127.0.0.1:9200"
+    debug: bool = True
+    redis_uri: RedisDsn
+    elastic_uri: str
     es_index = 'movies'
     es_id_field = 'id'
 
     class Config:
         validate_assignment = True
-        env_file = ".env"
+        env_file = "../../../.env"
 
     def configure_logging(self) -> None:
         basedir = os.path.abspath(os.path.dirname(__file__))
