@@ -8,7 +8,7 @@ from src.backoff import backoff
 from tests.functional.settings import test_settings
 
 
-# @backoff()
+@backoff()
 def wait():
     logger.debug("waiting for es")
     logger.debug(test_settings.elastic_uri)
