@@ -6,6 +6,7 @@ import pytest
 from elasticsearch import AsyncElasticsearch
 
 from tests.functional.settings import test_settings
+from tests.functional.utils.backoff import backoff
 
 
 @dataclass
@@ -14,6 +15,7 @@ class HTTPResponse:
     status: int
 
 
+@backoff()
 @pytest.fixture
 def es_write_data():
     async def inner(data: list[dict], index: str):
@@ -42,6 +44,7 @@ def es_write_data():
     return inner
 
 
+@backoff()
 @pytest.fixture
 def make_get_request():
     async def inner(url: str, query_data: dict = None):
