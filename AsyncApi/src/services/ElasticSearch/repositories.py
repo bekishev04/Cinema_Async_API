@@ -8,6 +8,7 @@ from fastapi import Depends
 
 from src import schemas
 from src.database.elastic import get_elastic
+from src.backoff import backoff
 
 
 class AbstractRepo(abc.ABC):
@@ -27,6 +28,7 @@ class FilmWorkRepo(AbstractRepo):
 
     _index = "movies"
 
+    @backoff()
     async def get_by(self, id: uuid.UUID) -> ObjectApiResponse:
         try:
             resp = await self._es.get(id=str(id), index=self._index)
@@ -35,6 +37,7 @@ class FilmWorkRepo(AbstractRepo):
 
         return resp
 
+    @backoff()
     async def find_by(self, query: schemas.ArgsFilmWork) -> ObjectApiResponse:
         filter_ = []
         sort_ = []
@@ -71,6 +74,7 @@ class GenreRepo(AbstractRepo):
 
     _index = "genres"
 
+    @backoff()
     async def get_by(self, id: uuid.UUID) -> ObjectApiResponse:
         try:
             resp = await self._es.get(id=str(id), index=self._index)
@@ -79,6 +83,7 @@ class GenreRepo(AbstractRepo):
 
         return resp
 
+    @backoff()
     async def find_by(self, query: schemas.ArgsGenre) -> ObjectApiResponse:
         sort_ = []
         bool_ = {}
@@ -110,6 +115,7 @@ class PersonRepo(AbstractRepo):
 
     _index = "persons"
 
+    @backoff()
     async def get_by(self, id: uuid.UUID) -> Optional[dict]:
         try:
             person_data = await self._es.get(index="persons", id=str(id))
@@ -117,6 +123,7 @@ class PersonRepo(AbstractRepo):
             return None
         return person_data
 
+    @backoff()
     async def find_by(self, query: schemas.ArgsPerson) -> dict:
         filter_ = []
         sort_ = []
