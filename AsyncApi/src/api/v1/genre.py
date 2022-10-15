@@ -7,7 +7,7 @@ from src.schemas import ArgsGenre
 from src.services.service import GenreService
 
 
-router = APIRouter(prefix="/items")
+router = APIRouter(prefix="/genres")
 Items = "Items"
 
 
@@ -17,7 +17,7 @@ Items = "Items"
     status_code=http.HTTPStatus.OK,
     tags=[Items],
     summary=strings.GENRES_SEARCH_SUMMARY,
-    description=strings.GENRES_SEARCH_DESCRIPTION
+    description=strings.GENRES_SEARCH_DESCRIPTION,
 )
 async def genres_get(
     query: ArgsGenre = Depends(ArgsGenre),
@@ -34,7 +34,7 @@ async def genres_get(
     status_code=http.HTTPStatus.OK,
     tags=[Items],
     summary=strings.GENRES_GET_SUMMARY,
-    description=strings.GENRES_GET_DESCRIPTION
+    description=strings.GENRES_GET_DESCRIPTION,
 )
 async def genre_get(
     id: uuid.UUID,
@@ -43,6 +43,8 @@ async def genre_get(
     resp = await service.get_by(id=id)
 
     if not resp:
-        raise HTTPException(status_code=http.HTTPStatus.NOT_FOUND, detail=strings.ITEM_NOT_FOUND)
+        raise HTTPException(
+            status_code=http.HTTPStatus.NOT_FOUND, detail=strings.ITEM_NOT_FOUND
+        )
 
     return resp

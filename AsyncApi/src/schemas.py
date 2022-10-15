@@ -32,7 +32,7 @@ class BaseModelSchema(PydanticBaseModel):
 class ArgsPaginate(BaseModel):
     """Args Schema paginate"""
 
-    offset: int = Field(0, ge=0, description="Номер сдвига") #todo нужно переносить в strings?
+    offset: int = Field(0, ge=0, description="Номер сдвига")
     limit: int = Field(50, gt=0, description="Кол-во элементов")
 
 
@@ -80,7 +80,6 @@ class ItemsPerson(BaseModel):
 
 class ItemGenre(BaseModelSchema):
     name: str
-    description: str | None
 
 
 class ItemsGenre(BaseModel):

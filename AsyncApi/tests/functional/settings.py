@@ -9,8 +9,7 @@ class TestSettings(BaseSettings):
     debug: bool = True
     redis_uri: RedisDsn
     elastic_uri: str
-    es_index = 'movies'
-    es_id_field = 'id'
+    service_url: str
 
     class Config:
         validate_assignment = True

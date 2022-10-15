@@ -1,73 +1,76 @@
-import datetime
-import uuid
 import json
+import uuid
 
 import aiohttp
 import pytest
+from elasticsearch import AsyncElasticsearch, helpers
 
-from elasticsearch import AsyncElasticsearch
-from elasticsearch import helpers
-
+from tests.functional.helpers import generate_doc, delete_doc
 from tests.functional.settings import test_settings
 
 
 @pytest.mark.asyncio
-async def test_search():
-    es_data = [{
-        'id': str(uuid.uuid4()),
-        'imdb_rating': 8.5,
-        'genre': ['Action', 'Sci-Fi'],
-        'title': 'The Star',
-        'description': 'New World',
-        'director': ['Stan'],
-        'actors_names': ['Ann', 'Bob'],
-        'writers_names': ['Ben', 'Howard'],
-        'actors': [
-            {'id': '111', 'name': 'Ann'},
-            {'id': '222', 'name': 'Bob'}
-        ],
-        'writers': [
-            {'id': '333', 'name': 'Ben'},
-            {'id': '444', 'name': 'Howard'}
-        ],
-        'created_at': datetime.datetime.now().isoformat(),
-        'updated_at': datetime.datetime.now().isoformat(),
-        'film_work_type': 'movie'
-    } for _ in range(60)]
+async def test_search_genre():
+    es_data = [
+        {
+            "id": str(uuid.uuid4()),
+            "name": "test",
+        }
+        for _ in range(50)
+    ]
 
     bulk_query = []
     for row in es_data:
-        bulk_query.extend([
-            json.dumps({'index': {'_index': test_settings.es_index, '_id': row[test_settings.es_id_field]}}),
-            json.dumps(row)
-        ])
+        bulk_query.extend(
+            [
+                json.dumps(
+                    {
+                        "index": {
+                            "_index": "genres",
+                            "_id": row["id"],
+                        }
+                    }
+                ),
+                json.dumps(row),
+            ]
+        )
 
-    str_query = '\n'.join(bulk_query) + '\n'
-    # gen_query = (b for b in bulk_query)
+    str_query = "\n".join(bulk_query) + "\n"
 
-    # 2. Загружаем данные в ES
-
-    es_client = AsyncElasticsearch(hosts=test_settings.elastic_uri,
-                                   verify_certs=False)
-    # response = await es_client.bulk(str_query, refresh=True)
-    response = await helpers.async_bulk(es_client, str_query)
+    es_client = AsyncElasticsearch(hosts=test_settings.elastic_uri, verify_certs=False)
+    response = await es_client.bulk(index="genres", body=str_query, refresh=True)
     await es_client.close()
-    print(response)
-    if response['errors']:
-        raise Exception('Ошибка записи данных в Elasticsearch')
 
-    # 3. Запрашиваем данные из ES по API
+    if response["errors"]:
+        raise Exception("Ошибка записи данных в Elasticsearch")
 
     session = aiohttp.ClientSession()
-    url = test_settings.service_url + '/api/v1/search'
-    query_data = {'search': 'The Star'}
+    url = test_settings.service_url + "/api/v1/genres/genre"
+    query_data = {"name": "test"}
     async with session.get(url, params=query_data) as response:
         body = await response.json()
-        headers = response.headers
         status = response.status
     await session.close()
 
-    # 4. Проверяем ответ
-
     assert status == 200
-    assert len(response.body) == 50
+    assert len(body["items"]) == body["total"] == 50
+
+
+@pytest.mark.asyncio
+async def test_cache_genre(make_get_request):
+
+    uuid_key = uuid.uuid4()
+    data = {"id": uuid_key, "name": "Test"}
+
+    es_client = AsyncElasticsearch(hosts=test_settings.elastic_uri, verify_certs=False)
+
+    await helpers.async_bulk(es_client, generate_doc([data], "genres"))
+
+    response_first = await make_get_request(f"api/v1/genres/genre/{uuid_key}/")
+    assert response_first.status == 200
+
+    await helpers.async_bulk(es_client, delete_doc([data], "genres"))
+
+    response_second = await make_get_request(f"api/v1/genres/genre/{uuid_key}/")
+    assert response_second.status == 200
+    assert response_first.body == response_second.body
