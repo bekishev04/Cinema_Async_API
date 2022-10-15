@@ -1,3 +1,4 @@
+import http
 import uuid
 
 import pytest
@@ -21,7 +22,7 @@ async def test_search(es_write_data, make_get_request):
     query_data = {"title": name}
     response = await make_get_request("api/v1/film-work/movie", query_data)
 
-    assert response.status == 200
+    assert response.status == http.HTTPStatus.OK
     assert len(response.body["items"]) == 50
 
 
@@ -29,4 +30,4 @@ async def test_not_found(make_get_request):
     uuid_key = uuid.uuid4()
 
     response_first = await make_get_request(f"api/v1/film-work/movie/{uuid_key}")
-    assert response_first.status == 404
+    assert response_first.status == http.HTTPStatus.NOT_FOUND

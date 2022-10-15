@@ -1,3 +1,4 @@
+import http
 import uuid
 
 import pytest
@@ -23,7 +24,7 @@ async def test_search_genre(make_get_request, es_write_data):
     query_data = {"name": name}
     response = await make_get_request("api/v1/genres/genre", query_data)
 
-    assert response.status == 200
+    assert response.status == http.HTTPStatus.OK
     assert len(response.body["items"]) == response.body["total"] == 50
 
 
@@ -38,12 +39,12 @@ async def test_cache_genre(make_get_request):
     await helpers.async_bulk(es_client, generate_doc([data], "genres"))
 
     response_first = await make_get_request(f"api/v1/genres/genre/{uuid_key}")
-    assert response_first.status == 200
+    assert response_first.status == http.HTTPStatus.OK
 
     await helpers.async_bulk(es_client, delete_doc([data], "genres"))
 
     response_second = await make_get_request(f"api/v1/genres/genre/{uuid_key}")
-    assert response_second.status == 200
+    assert response_second.status == http.HTTPStatus.OK
     assert response_first.body == response_second.body
 
 
@@ -51,4 +52,4 @@ async def test_not_found(make_get_request):
     uuid_key = uuid.uuid4()
 
     response_first = await make_get_request(f"api/v1/genres/genre/{uuid_key}")
-    assert response_first.status == 404
+    assert response_first.status == http.HTTPStatus.NOT_FOUND

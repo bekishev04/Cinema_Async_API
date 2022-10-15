@@ -1,3 +1,4 @@
+import http
 import uuid
 
 import pytest
@@ -23,7 +24,7 @@ async def test_search_person(es_write_data, make_get_request):
     query_data = {"full_name": "test"}
     response = await make_get_request("api/v1/persons/person", query_data)
 
-    assert response.status == 200
+    assert response.status == http.HTTPStatus.OK
     assert len(response.body["items"]) == response.body["total"] == 50
 
 
@@ -38,13 +39,13 @@ async def test_cache_person(make_get_request):
     await helpers.async_bulk(es_client, generate_doc([data], "persons"))
 
     response_first = await make_get_request(f"api/v1/persons/person/{uuid_key}")
-    assert response_first.status == 200
+    assert response_first.status == http.HTTPStatus.OK
     await helpers.async_bulk(es_client, delete_doc([data], "persons"))
 
     await es_client.close()
 
     response_second = await make_get_request(f"api/v1/persons/person/{uuid_key}")
-    assert response_second.status == 200
+    assert response_second.status == http.HTTPStatus.OK
     assert response_first.body == response_second.body
 
 
@@ -52,4 +53,4 @@ async def test_not_found(make_get_request):
     uuid_key = uuid.uuid4()
 
     response_first = await make_get_request(f"api/v1/persons/person/{uuid_key}")
-    assert response_first.status == 404
+    assert response_first.status == http.HTTPStatus.NOT_FOUND
