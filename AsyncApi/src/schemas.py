@@ -35,7 +35,7 @@ class ArgsFilmWork(ArgsPaginate):
     title: str | None
     rating: float | None
     sort_by: Literal[
-        "rating",
+        "imdb_rating",
     ] | None
     sort: Literal[
         "asc",
