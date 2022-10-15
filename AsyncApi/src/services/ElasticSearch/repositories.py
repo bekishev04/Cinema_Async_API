@@ -53,12 +53,12 @@ class FilmWorkRepo(AbstractRepo):
             bool_["filter"] = filter_
 
         if query.sort_by and query.sort:
-            sort_.append([{query.sort_by: query.sort}])
+            sort_.append({query.sort_by: query.sort})
 
         body = {
             "query": {"bool": bool_},
         }
-
+        print(sort_)
         resp = await self._es.search(
             index=self._index,
             body=body,
