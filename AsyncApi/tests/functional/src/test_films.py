@@ -8,6 +8,7 @@ from tests.functional.helpers import generate_doc, delete_doc
 from tests.functional.settings import test_settings
 from tests.functional.testdata.films import create_data
 
+
 pytestmark = pytest.mark.asyncio
 
 
