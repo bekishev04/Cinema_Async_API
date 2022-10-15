@@ -8,16 +8,17 @@ from tests.functional.helpers import generate_doc, delete_doc
 from tests.functional.settings import test_settings
 from tests.functional.testdata.films import create_data
 
-
 pytestmark = pytest.mark.asyncio
 
 
 async def test_search(es_write_data, make_get_request):
     name = "The Computer game"
+
     es_data = [
         create_data(name=name)
         for _ in range(50)
     ]
+    es_data_dict = {d['id']: d for d in es_data}
 
     await es_write_data(es_data, "movies")
 
@@ -28,8 +29,15 @@ async def test_search(es_write_data, make_get_request):
     assert len(response.body["items"]) == 50
 
     # test limit/offset
-    query_data = {"title": name, "limit":10, "offset": 10}
+    query_data = {"title": name, "limit": 10, "offset": 10}
     response = await make_get_request("api/v1/film-work/movie", query_data)
+
+    for item in response.body["items"]:
+        reference_item = es_data_dict.get(item["id"], None)
+        if not reference_item:
+            raise AssertionError
+        for k, v in item.items():
+            assert reference_item.get(k, None) == v
 
     assert response.status == http.HTTPStatus.OK
     assert len(response.body["items"]) == 10
@@ -44,9 +52,8 @@ async def test_not_found(make_get_request):
 
 
 async def test_cache_person(make_get_request):
-
     uuid_key = uuid.uuid4()
-    data =create_data(name="Test", id=uuid_key)
+    data = create_data(name="Test", id=uuid_key)
 
     es_client = AsyncElasticsearch(hosts=test_settings.elastic_uri, verify_certs=False)
 
