@@ -4,17 +4,7 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - db
-  db:
-    image: postgres:14.5-alpine
-    ports:
-      - 5432:5432
-    volumes:
-      - ./docker-volumes/:/var/lib/postgresql/data/
-    environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=&{DB_PASSWORD}
-      - POSTGRES_DB=&{DB_NAME}
+      - es01
   es01:
     image: elasticsearch:8.4.1
     ports:
@@ -25,8 +15,6 @@ services:
       - http.compression=true
       - http.max_content_length=500mb
       - xpack.security.enabled=false
-    depends_on:
-      - db
   etl:
     build:
       context: ./etl
@@ -39,3 +27,13 @@ services:
       - 80:80
     depends_on:
       - app
+  redis:
+    image: redis:6.2-alpine
+    expose:
+      - 6379
+    volumes:
+      - cache:/data
+
+volumes:
+  cache:
+    driver: local
