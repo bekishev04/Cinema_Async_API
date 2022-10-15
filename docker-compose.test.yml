@@ -9,6 +9,10 @@ services:
     depends_on:
       - es01
       - redis01
+    environment:
+      - elastic_uri=http://es01:9200
+      - redis_uri=redis://redis01:6379
+      - service_url=http://app:8000
   tests:
     image: app-image
     depends_on:
@@ -39,11 +43,7 @@ services:
       - http.compression=true
       - http.max_content_length=500mb
       - xpack.security.enabled=false
-    ports:
-      - 9200:9200
   redis01:
     image: redis:latest
     expose:
       - 6379
-    ports:
-      - 6379:6379
