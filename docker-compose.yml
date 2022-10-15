@@ -27,3 +27,15 @@ services:
       - xpack.security.enabled=false
     depends_on:
       - db
+  etl:
+    build:
+      context: ./etl
+      dockerfile: Dockerfile
+    depends_on:
+      - es01
+  nginx:
+    build: nginx_settings
+    ports:
+      - 80:80
+    depends_on:
+      - app

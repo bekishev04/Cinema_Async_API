@@ -12,7 +12,7 @@ async def http_error_handler(_: Request, exc: HTTPException) -> JSONResponse:
 
 async def http422_error_handler(
     _: Request,
-    exc: RequestValidationError| ValidationError,
+    exc: RequestValidationError | ValidationError,
 ) -> JSONResponse:
     return JSONResponse(
         {"message": exc.errors()},

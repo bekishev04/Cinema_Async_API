@@ -17,7 +17,7 @@ FilmWork = "FilmWork"
     status_code=http.HTTPStatus.OK,
     tags=[FilmWork],
     summary=strings.MOVIE_SEARCH_SUMMARY,
-    description=strings.MOVIE_SEARCH_DESCRIPTION
+    description=strings.MOVIE_SEARCH_DESCRIPTION,
 )
 async def film_works_get(
     query: ArgsFilmWork = Depends(ArgsFilmWork),
@@ -34,7 +34,7 @@ async def film_works_get(
     status_code=http.HTTPStatus.OK,
     tags=[FilmWork],
     summary=strings.MOVIE_GET_SUMMARY,
-    description=strings.MOVIE_GET_DESCRIPTION
+    description=strings.MOVIE_GET_DESCRIPTION,
 )
 async def film_work_get(
     id: uuid.UUID,
@@ -43,6 +43,8 @@ async def film_work_get(
     resp = await service.get_by(id=id)
 
     if not resp:
-        raise HTTPException(status_code=http.HTTPStatus.NOT_FOUND, detail=strings.ITEM_NOT_FOUND)
+        raise HTTPException(
+            status_code=http.HTTPStatus.NOT_FOUND, detail=strings.ITEM_NOT_FOUND
+        )
 
     return resp

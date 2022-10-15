@@ -20,10 +20,14 @@ services:
           poetry install --only "test"
           poetry run python3 tests/functional/utils/wait_for_es.py
           poetry run python3 tests/functional/utils/wait_for_redis.py
+          poetry run python3 tests/functional/utils/delete_schemas.py
+          poetry run python3 tests/functional/utils/create_schemas.py
           poetry run pytest tests/functional/src
+
     environment:
       - elastic_uri=http://es01:9200
       - redis_uri=redis://redis01:6379
+      - service_url=http://app:8000
 
   es01:
     image: elasticsearch:8.4.1
