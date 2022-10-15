@@ -1,10 +1,7 @@
 import uuid
 
 import pytest
-from elasticsearch import AsyncElasticsearch, helpers
 
-from tests.functional.helpers import delete_doc, generate_doc
-from tests.functional.settings import test_settings
 from tests.functional.testdata.films import create_data
 
 

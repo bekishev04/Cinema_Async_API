@@ -1,6 +1,3 @@
-import sys
-import time
-
 from elasticsearch import Elasticsearch, exceptions
 from loguru import logger
 

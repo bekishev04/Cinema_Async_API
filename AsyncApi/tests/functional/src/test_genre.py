@@ -1,14 +1,11 @@
-import json
 import uuid
 
-import aiohttp
 import pytest
 from elasticsearch import AsyncElasticsearch, helpers
 
 from tests.functional.helpers import generate_doc, delete_doc
 from tests.functional.settings import test_settings
 from tests.functional.testdata.genres import create_data
-
 
 pytestmark = pytest.mark.asyncio
 
