@@ -5,17 +5,12 @@ import orjson
 from pydantic import BaseModel as PydanticBaseModel, Field
 
 
-def orjson_dumps(v, *, default):
-    return orjson.dumps(v, default=default).decode()
-
 
 class BaseModel(PydanticBaseModel):
     """Base Schema"""
 
     class Config:
         anystr_strip_whitespace = True
-        json_loads = orjson.loads
-        json_dumps = orjson_dumps
 
 
 class BaseModelSchema(PydanticBaseModel):
@@ -25,8 +20,6 @@ class BaseModelSchema(PydanticBaseModel):
 
     class Config:
         orm_mode = True
-        json_loads = orjson.loads
-        json_dumps = orjson_dumps
 
 
 class ArgsPaginate(BaseModel):

@@ -11,6 +11,7 @@ from src.schemas import (
     ItemGenre,
     ItemsFilmWork,
     ItemFilmWork,
+    DetailFilmWork,
 )
 
 
@@ -46,5 +47,5 @@ class FilmConverter(AbstractConverter):
     def list(self, data: ObjectApiResponse) -> ItemsFilmWork:
         return ItemsFilmWork.parse_raw(data)
 
-    def one(self, data: ObjectApiResponse) -> ItemFilmWork:
-        return ItemFilmWork.parse_raw(data)
+    def one(self, data: ObjectApiResponse) -> DetailFilmWork:
+        return DetailFilmWork.parse_raw(data)
