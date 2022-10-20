@@ -12,9 +12,7 @@ RUN apt-get update && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 COPY pyproject.toml ./
-RUN pip install poetry && \
-    poetry config virtualenvs.in-project true && \
-    poetry install --without dev,test
+RUN pip install poetry  && poetry install --without dev,test
 
 COPY . ./
 
