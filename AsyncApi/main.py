@@ -6,7 +6,7 @@ from fastapi.exceptions import RequestValidationError
 from starlette.exceptions import HTTPException
 from starlette.middleware.cors import CORSMiddleware
 
-from src.config import AppSettings
+from src.config import settings
 from src.api import router as api_router
 from src.database import redis, elastic
 from src.errorhandler import (
@@ -16,8 +16,6 @@ from src.errorhandler import (
 
 
 def get_application() -> FastAPI:
-    settings = AppSettings()
-
     settings.configure_logging()
 
     application = FastAPI(**settings.fastapi_kwargs)

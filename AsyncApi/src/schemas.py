@@ -1,4 +1,5 @@
 import uuid
+import datetime
 from typing import Literal
 
 import orjson
@@ -20,6 +21,14 @@ class BaseModelSchema(PydanticBaseModel):
 
     class Config:
         orm_mode = True
+
+class JWTPayload(BaseModelSchema):
+    """Item Schema For JWTPayload"""
+
+    login: str
+    full_name: str
+    role: str
+    valid_through: datetime.datetime
 
 
 class ArgsPaginate(BaseModel):

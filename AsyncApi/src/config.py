@@ -27,6 +27,9 @@ class AppSettings(BaseSettings):
 
     default_response_class = ORJSONResponse
 
+    jwt_secret: str
+    jwt_algorithm: str
+
     class Config:
         validate_assignment = True
         env_file = ".env"
@@ -51,3 +54,6 @@ class AppSettings(BaseSettings):
             os.path.join(os.path.dirname(basedir), "logs", "app.log"),
             level="DEBUG" if self.debug else "ERROR",
         )
+
+
+settings = AppSettings()

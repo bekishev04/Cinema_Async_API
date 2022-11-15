@@ -6,6 +6,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from src import schemas, strings
 from src.schemas import ArgsFilmWork
 from src.services.service import FilmWorkService
+from src.tokens.tokens import JWTBearer
 
 router = APIRouter(prefix="/film-work")
 FilmWork = "FilmWork"
@@ -35,6 +36,7 @@ async def film_works_get(
     tags=[FilmWork],
     summary=strings.MOVIE_GET_SUMMARY,
     description=strings.MOVIE_GET_DESCRIPTION,
+    dependencies=[Depends(JWTBearer())]
 )
 async def film_work_get(
     id: uuid.UUID,
