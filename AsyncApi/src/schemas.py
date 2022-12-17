@@ -2,9 +2,7 @@ import uuid
 import datetime
 from typing import Literal
 
-import orjson
 from pydantic import BaseModel as PydanticBaseModel, Field
-
 
 
 class BaseModel(PydanticBaseModel):
@@ -115,7 +113,7 @@ class ItemsFilmWork(BaseModel):
 
 class ReqKafkaFilmTimeStamp(BaseModel):
     film_id: uuid.UUID
-    film_timestamp: datetime.datetime
+    film_timestamp: int
     event_time: datetime.datetime
 
 
