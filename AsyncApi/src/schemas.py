@@ -22,6 +22,7 @@ class BaseModelSchema(PydanticBaseModel):
     class Config:
         orm_mode = True
 
+
 class JWTPayload(BaseModelSchema):
     """Item Schema For JWTPayload"""
 
@@ -110,3 +111,13 @@ class DetailFilmWork(ItemFilmWork):
 class ItemsFilmWork(BaseModel):
     total: int
     items: list[ItemFilmWork]
+
+
+class ReqKafkaFilmTimeStamp(BaseModel):
+    film_id: uuid.UUID
+    film_timestamp: datetime.datetime
+    event_time: datetime.datetime
+
+
+class KafkaFilmTimeStamp(ReqKafkaFilmTimeStamp):
+    user_id: uuid.UUID

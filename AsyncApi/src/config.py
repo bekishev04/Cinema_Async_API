@@ -30,6 +30,9 @@ class AppSettings(BaseSettings):
     jwt_secret: str
     jwt_algorithm: str
 
+    kafka_url: str
+    kafka_topic: str
+
     class Config:
         validate_assignment = True
         env_file = ".env"

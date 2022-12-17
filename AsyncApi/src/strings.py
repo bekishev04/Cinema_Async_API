@@ -18,3 +18,6 @@ GENRES_GET_DESCRIPTION = "Getting genre by id"
 
 GENRES_SEARCH_SUMMARY = "Searching for genre"
 GENRES_SEARCH_DESCRIPTION = "Searching for genre, query options are: ..."
+
+KAFKA_SEARCH_SUMMARY = "Create row time for kafka"
+KAFKA_SEARCH_DESCRIPTION = "Create row time for kafka, query options are: ..."
