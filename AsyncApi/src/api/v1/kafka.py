@@ -24,7 +24,7 @@ async def film_timestamp(
     kafka_event_sendler: KafkaEventSendler = Depends(get_kafka_event_sendler),
     payload: dict = Depends(JWTBearer().payload),
 ) -> http.HTTPStatus.OK:
-    await kafka_event_sendler.post_event(
+    kafka_event_sendler.post_event(
         topic=settings.kafka_topic,
         event_obj=film_timestamp,
         user_id=payload.get("id"),
