@@ -19,7 +19,7 @@ TAG = "Kafka"
     summary=strings.KAFKA_SEARCH_SUMMARY,
     description=strings.KAFKA_SEARCH_DESCRIPTION,
 )
-async def film_timestamp(
+def film_timestamp(
     film_timestamp: schemas.ReqKafkaFilmTimeStamp,
     kafka_event_sendler: KafkaEventSendler = Depends(get_kafka_event_sendler),
     payload: dict = Depends(JWTBearer().payload),
