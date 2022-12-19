@@ -12,7 +12,7 @@ TAG = "Kafka"
 
 
 @router.post(
-    "/genre",
+    "/progress",
     response_model=schemas.ItemsGenre,
     status_code=http.HTTPStatus.OK,
     tags=[TAG],
